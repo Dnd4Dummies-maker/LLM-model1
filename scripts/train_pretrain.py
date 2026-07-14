@@ -24,15 +24,16 @@ def main():
     model = TransformerLM(config)
 
     from datasets import load_dataset
-    print("Loading dataset...")
-    ds = load_dataset("wikitext", "wikitext-103-raw-v1", split="train", streaming=True)
+    print("Loading Alpaca dataset...")
+    ds = load_dataset("tatsu-lab/alpaca", split="train", streaming=True)
 
     print("Tokenizing...")
     all_tokens = []
     for i, example in enumerate(ds):
-        if i >= 50000:
+        if i >= 20000:
             break
-        all_tokens.extend(tokenizer.encode(example["text"]))
+        text = example.get("instruction", "") + "\n" + example.get("input", "") + "\n" + example.get("output", "")
+        all_tokens.extend(tokenizer.encode(text))
 
     print(f"Total tokens: {len(all_tokens):,}")
 
