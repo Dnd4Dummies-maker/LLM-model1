@@ -28,17 +28,22 @@ def main():
     print("Loaded pre-trained model")
 
     from datasets import load_dataset
-    print("Loading ShareGPT dataset...")
-    ds = load_dataset("anon8231489123/ShareGPT_Vicuna_unfiltered", split="train", streaming=True)
+    print("Loading Guanaco dataset...")
+    ds = load_dataset("mlabonne/guanaco-llama2-1k", split="train", streaming=True)
 
     conversations = []
     for i, example in enumerate(ds):
         if i >= 10000:
             break
+        text = example.get("text", "")
         conv = []
-        for turn in example.get("conversations", []):
-            role = "user" if turn.get("from") == "human" else "assistant"
-            conv.append({"role": role, "content": turn.get("value", "")})
+        parts = text.split("### ")
+        for part in parts:
+            part = part.strip()
+            if part.startswith("Human:"):
+                conv.append({"role": "user", "content": part[len("Human:"):].strip()})
+            elif part.startswith("Assistant:"):
+                conv.append({"role": "assistant", "content": part[len("Assistant:"):].strip()})
         if conv:
             conversations.append(conv)
 
