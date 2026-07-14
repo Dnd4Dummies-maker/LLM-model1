@@ -1,0 +1,12 @@
+{
+    "vocab_size": 32000,
+    "max_seq_len": 2048,
+    "n_layers": 12,
+    "n_heads": 8,
+    "d_model": 512,
+    "d_ff": 1376,
+    "dropout": 0.0,
+    "bias": false,
+    "rope": true,
+    "tied_weights": false
+}
